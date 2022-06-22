@@ -8,12 +8,14 @@ exports.handler = async function (event) {
   const lambda = new Lambda();
 
   // Update dynamoDB entry for "path" with hits++
-  await dynamo.updateItem({
-    TableName: process.env.HITS_TABLE_NAME,
-    Key: { path: { S: event.path } },
-    UpdateExpression: "ADD hits :incr",
-    ExpressionAttributeValues: { ":incr": { N: "1" } },
-  });
+  await dynamo
+    .updateItem({
+      TableName: process.env.HITS_TABLE_NAME,
+      Key: { path: { S: event.path } },
+      UpdateExpression: "ADD hits :incr",
+      ExpressionAttributeValues: { ":incr": { N: "1" } },
+    })
+    .promise();
 
   // Call downstream function and capture response
   const resp = await lambda
